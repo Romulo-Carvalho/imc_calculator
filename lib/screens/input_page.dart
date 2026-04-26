@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'icon_content.dart';
-import 'reusable_card.dart';
+import 'package:imc_calculator/screens/results_page.dart';
+import '../components/icon_content.dart';
+import '../components/reusable_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'constants.dart';
+import '../constants.dart';
+import '../components/bottom_button.dart';
+import '../components/round_icon_button.dart';
+import 'package:imc_calculator/calculator_brain.dart';
 
 enum Gender { male, female }
 
@@ -185,46 +189,28 @@ class _InputPageState extends State<InputPage> {
                 ],
               ),
             ),
-            Container(
-              color: kBottomCC,
-              margin: EdgeInsets.only(top: 10.0),
-              width: double.infinity,
-              height: kBottomContainerHeight,
-              child: Center(
-                child: Text(
-                  'Calculate',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30.0),
-                ),
-              ),
+            BottomButton(
+              buttonTitle: 'Calculate',
+              onTap: () {
+                CalculatorBrain calc = CalculatorBrain(
+                  weight: weight,
+                  height: height,
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ResultsPage(
+                      imcResult: calc.calculateIMC(),
+                      text: calc.getResult(),
+                      interpretation: calc.getInterpretation(),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class RoundIconButon extends StatelessWidget {
-  const RoundIconButon({
-    super.key,
-    required this.icon,
-    required this.onPressed,
-  });
-
-  final IconData icon;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return RawMaterialButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadiusGeometry.circular(15),
-      ),
-      elevation: 6.0,
-      fillColor: const Color(0xff4c4f5e),
-      constraints: BoxConstraints.tightFor(width: 56.0, height: 56.0),
-      onPressed: onPressed,
-      child: Icon(icon),
     );
   }
 }
